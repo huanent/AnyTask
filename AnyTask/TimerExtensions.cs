@@ -40,7 +40,14 @@ namespace AnyTask
 
                 try
                 {
-                    Task.Delay(-1, tokenSource.Token).Wait();
+#if NET40
+                    Task.WaitAll(new Task(() =>
+                    {
+                        Thread.Sleep(Timeout.Infinite);
+                    }, tokenSource.Token));
+#else
+                    Task.Delay(Timeout.Infinite, tokenSource.Token).Wait();
+#endif
                 }
                 catch (Exception)
                 {

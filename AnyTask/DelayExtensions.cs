@@ -14,12 +14,21 @@ namespace AnyTask
             {
                 try
                 {
+#if NET40
+                    Task.WaitAll(new Task(() =>
+                    {
+                        Thread.Sleep(timeSpan);
+                    }, job._cancellationTokenSource.Token));
+#else
                     Task.Delay(timeSpan, job._cancellationTokenSource.Token).Wait();
+#endif
+
+
                 }
                 catch (Exception)
                 {
                 }
-                
+
             });
             return job;
         }

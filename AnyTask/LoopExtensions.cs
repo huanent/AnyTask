@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AnyTask
@@ -20,7 +21,7 @@ namespace AnyTask
 
                     if (async)
                     {
-                        var task = Task.Run(new Action(action));
+                        var task = Task.Factory.StartNew(new Action(action));
                         tasks.Add(task);
                     }
                     else action();
@@ -28,7 +29,14 @@ namespace AnyTask
                     {
                         try
                         {
+#if NET40
+                            Task.WaitAll(new Task(() =>
+                            {
+                                Thread.Sleep(Timeout.Infinite);
+                            }, job._cancellationTokenSource.Token));
+#else
                             Task.Delay(interval.Value, job._cancellationTokenSource.Token).Wait();
+#endif
                         }
                         catch (Exception)
                         {
@@ -40,7 +48,7 @@ namespace AnyTask
                 {
                     try
                     {
-                        Task.WhenAll(tasks).Wait(job._cancellationTokenSource.Token);
+                        Task.WaitAll(tasks.ToArray(), job._cancellationTokenSource.Token);
                     }
                     catch (Exception)
                     {
