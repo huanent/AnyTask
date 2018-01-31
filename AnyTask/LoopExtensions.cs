@@ -32,7 +32,7 @@ namespace AnyTask
 #if NET40
                             Task.WaitAll(new Task(() =>
                             {
-                                Thread.Sleep(Timeout.Infinite);
+                                Thread.Sleep(interval.Value);
                             }, job._cancellationTokenSource.Token));
 #else
                             Task.Delay(interval.Value, job._cancellationTokenSource.Token).Wait();
