@@ -30,7 +30,7 @@ namespace AnyTask
                         try
                         {
 #if NET40
-                            Task.WaitAll(new Task(() =>
+                            Task.WaitAll(Task.Factory.StartNew(() =>
                             {
                                 Thread.Sleep(interval.Value);
                             }, job._cancellationTokenSource.Token));
