@@ -16,7 +16,8 @@ namespace Demo
              {
                  Console.WriteLine("任务执行");
              })
-            .Timer(count: 3)
+            .Delay(new TimeSpan(0, 0, 2))
+            .Once()
             .Start();
 
             job.OnStart += () =>

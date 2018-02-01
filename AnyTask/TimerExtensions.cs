@@ -41,7 +41,7 @@ namespace AnyTask
                 try
                 {
 #if NET40
-                    Task.WaitAll(new Task(() =>
+                    Task.WaitAll(Task.Factory.StartNew(() =>
                     {
                         Thread.Sleep(Timeout.Infinite);
                     }, tokenSource.Token));
